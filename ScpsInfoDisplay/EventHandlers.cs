@@ -74,31 +74,34 @@ namespace ScpsInfoDisplay
                 yield return Timing.WaitForSeconds(0.5f);
                 try
                 {
-                    string text = string.Empty;
-                    foreach (KeyValuePair<string, string> integration in ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations)
+                    if (player != null)
                     {
-                        foreach (Player any in Player.List)
+                        string text = string.Empty;
+                        foreach (KeyValuePair<string, string> integration in ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations)
                         {
-                            if (any != null && any.SessionVariables.ContainsKey(integration.Key))
+                            foreach (Player any in Player.List)
                             {
-                                text += $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>" + (player == any && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + integration.Value.Replace("%arhealth%", any.ArtificialHealth > 0 ? any.ArtificialHealth.ToString() : "").Replace("%healthpercent%", Math.Round((Mathf.Clamp01(any.Health / (float)any.MaxHealth) * 100), 0).ToString()).Replace("%health%", Math.Round(any.Health, 0).ToString()).Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString()).Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "").Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleType.Scp0492).ToString()).Replace("%distance%", any != player ? Math.Round(Vector3.Distance(player.Position, any.Position), 0).ToString() + "m" : "") + "</align>\n";
+                                if (any != null && any.SessionVariables.ContainsKey(integration.Key))
+                                {
+                                    text += $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>" + (player == any && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + integration.Value.Replace("%arhealth%", any.ArtificialHealth > 0 ? any.ArtificialHealth.ToString() : "").Replace("%healthpercent%", Math.Round((Mathf.Clamp01(any.Health / (float)any.MaxHealth) * 100), 0).ToString()).Replace("%health%", Math.Round(any.Health, 0).ToString()).Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString()).Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "").Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleType.Scp0492).ToString()).Replace("%distance%", any != player ? Math.Round(Vector3.Distance(player.Position, any.Position), 0).ToString() + "m" : "") + "</align>\n";
+                                }
                             }
                         }
-                    }
 
-                    foreach (Player scp in Player.List.Where(p => p.Role.Team == Team.SCP && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role.Type)))
-                    {
-                        if (scp != null)
+                        foreach (Player scp in Player.List.Where(p => p.Role.Team == Team.SCP && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role.Type)))
                         {
-                            text += $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>" + (player == scp && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role.Type].Replace("%arhealth%", scp.ArtificialHealth > 0 ? scp.ArtificialHealth.ToString() : "").Replace("%healthpercent%", Math.Round((Mathf.Clamp01(scp.Health / (float)scp.MaxHealth) * 100), 0).ToString()).Replace("%health%", Math.Round(scp.Health, 0).ToString()).Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString()).Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "").Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleType.Scp0492).ToString()).Replace("%distance%", scp != player ? Math.Round(Vector3.Distance(player.Position, scp.Position), 0).ToString() + "m" : "") + "</align>\n";
+                            if (scp != null)
+                            {
+                                text += $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>" + (player == scp && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role.Type].Replace("%arhealth%", scp.ArtificialHealth > 0 ? scp.ArtificialHealth.ToString() : "").Replace("%healthpercent%", Math.Round((Mathf.Clamp01(scp.Health / (float)scp.MaxHealth) * 100), 0).ToString()).Replace("%health%", Math.Round(scp.Health, 0).ToString()).Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString()).Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "").Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleType.Scp0492).ToString()).Replace("%distance%", scp != player ? Math.Round(Vector3.Distance(player.Position, scp.Position), 0).ToString() + "m" : "") + "</align>\n";
+                            }
                         }
-                    }
 
-                    if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset >= 0 || (ScpsInfoDisplay.Singleton.Config.TextPositionOffset < 0 && (ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n')) > 0))
-                        text += new string('\n', ScpsInfoDisplay.Singleton.Config.TextPositionOffset >= 0 ? Math.Abs(ScpsInfoDisplay.Singleton.Config.TextPositionOffset - text.Count(t => t == '\n')) : ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n'));
-                    else if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset < 0)
-                        text = text.Insert(0, new string('\n', Math.Abs(ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n'))));
-                    player.ShowHint(text, 1f);
+                        if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset >= 0 || (ScpsInfoDisplay.Singleton.Config.TextPositionOffset < 0 && (ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n')) > 0))
+                            text += new string('\n', ScpsInfoDisplay.Singleton.Config.TextPositionOffset >= 0 ? Math.Abs(ScpsInfoDisplay.Singleton.Config.TextPositionOffset - text.Count(t => t == '\n')) : ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n'));
+                        else if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset < 0)
+                            text = text.Insert(0, new string('\n', Math.Abs(ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n'))));
+                        player.ShowHint(text, 1f);
+                    }
                 } 
                 catch (Exception ex)
                 {
