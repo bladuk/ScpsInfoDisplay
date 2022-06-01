@@ -42,11 +42,11 @@ namespace ScpsInfoDisplay
 
         public void OnRoundRestart()
         {
-            foreach (KeyValuePair<Player, CoroutineHandle> kvp in _allDisplays)
+            foreach (KeyValuePair<Player, CoroutineHandle> display in _allDisplays.ToList())
             {
-                if (kvp.Value.IsRunning)
-                    Timing.KillCoroutines(kvp.Value);
-                _allDisplays.Remove(kvp.Key);
+                if (display.Key != null && display.Value.IsRunning)
+                    Timing.KillCoroutines(display.Value);
+                _allDisplays.Remove(display.Key);
             }
             _allDisplays.Clear();
         }
