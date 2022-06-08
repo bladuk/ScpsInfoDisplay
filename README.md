@@ -14,9 +14,9 @@ Put ScpsInfoDisplay.dll under the release tab into %appdata%\EXILED\Plugins (Win
 | `%engaging%`  | Count of generators that are currently engaging (format: (+count)) |
 | `%zombies%`  | Count of SCP-049-2 |
 | `%distance%` | Distance between the player who seeng the list and SCP in meters |
-| `%079level` | Level of SCP-079 |
-| `%079experience` | Experience points of SCP-079 |
-| `%079energy` | Aux power of SCP-079 |
+| `%079level%` | Level of SCP-079 |
+| `%079experience%` | Experience points of SCP-079 |
+| `%079energy%` | Aux power of SCP-079 |
 
 Feel free to use this variables in display strings.
 
