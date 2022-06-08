@@ -13,7 +13,7 @@ namespace ScpsInfoDisplay
         {
             { RoleType.Scp106, "<color=#D51D1D>SCP-106 [%healthpercent%%] %distance%</color>" },
             { RoleType.Scp049, "<color=#D51D1D>SCP-049 [%healthpercent%%, Zombies: %zombies%] %distance%</color>" },
-            { RoleType.Scp079, "<color=#D51D1D>SCP-079 [%generators%%engaging%/3]</color>" },
+            { RoleType.Scp079, "<color=#D51D1D>SCP-079 [%generators%%engaging%/3] Lvl: %079level% Exp: %079experience% Energy: %079energy%</color>" },
             { RoleType.Scp096, "<color=#D51D1D>SCP-096 [%healthpercent%%] %distance%</color>" },
             { RoleType.Scp173, "<color=#D51D1D>SCP-173 [%healthpercent%%] %distance%</color>" },
             { RoleType.Scp93953, "<color=#D51D1D>SCP-939-53 [%healthpercent%%] %distance%</color>" },
