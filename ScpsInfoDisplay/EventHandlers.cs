@@ -58,7 +58,7 @@ namespace ScpsInfoDisplay
                 Timing.KillCoroutines(_allDisplays[ev.Player]);
                 _allDisplays.Remove(ev.Player);
             }
-            else if ((!_allDisplays.ContainsKey(ev.Player) && ev.NewRole.GetTeam() == Team.SCP && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(ev.NewRole)) || ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations.Keys.Any(key => ev.Player.SessionVariables.ContainsKey(key)))
+            if (!_allDisplays.ContainsKey(ev.Player) && (ev.NewRole.GetTeam() == Team.SCP && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(ev.NewRole) || ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations.Keys.Any(key => ev.Player.SessionVariables.ContainsKey(key))))
             {
                 _allDisplays.Add(ev.Player, Timing.RunCoroutine(_showDisplay(ev.Player)));
             }
@@ -101,7 +101,7 @@ namespace ScpsInfoDisplay
         private string ProcessStringVariables(string raw, Player observer, Player target) => raw
             .Replace("%arhealth%", target.ArtificialHealth > 0 ? target.ArtificialHealth.ToString() : "")
             .Replace("%healthpercent%", Math.Floor(Mathf.Clamp01(target.Health / target.MaxHealth) * 100).ToString())
-            .Replace("%health%", Math.Round(target.Health, 0).ToString())
+            .Replace("%health%", Math.Floor(target.Health).ToString())
             .Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString())
             .Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "").Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleType.Scp0492).ToString())
             .Replace("%distance%", target != observer ? Math.Floor(Vector3.Distance(observer.Position, target.Position)) + "m" : "")
