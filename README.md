@@ -9,7 +9,7 @@ Put ScpsInfoDisplay.dll under the release tab into %appdata%\EXILED\Plugins (Win
 | ------------- | ------------- |
 | `%health%` | Player's health points | 
 | `%arhealth%`  | Player's artifical health points |
-| `%helathpercent%`  | Player's health in percent |
+| `%healthpercent%`  | Player's health in percent |
 | `%generators%`  | Engaged generators count  |
 | `%engaging%`  | Count of generators that are currently engaging (format: (+count)) |
 | `%zombies%`  | Count of SCP-049-2 |
