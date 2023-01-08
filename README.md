@@ -1,4 +1,4 @@
-# ScpsInfoDisplay [![Downloads](https://img.shields.io/github/downloads/bladuk/ScpsInfoDisplay/total.svg)]
+# ScpsInfoDisplay ![Downloads](https://img.shields.io/github/downloads/bladuk/ScpsInfoDisplay/total.svg)
 When SCP spawns, displays information about players who are in the SCP team. Possible integration with custom roles.
 
 ## How to install plugin?
