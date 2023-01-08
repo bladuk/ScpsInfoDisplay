@@ -8,7 +8,6 @@ Put ScpsInfoDisplay.dll under the release tab into %appdata%\EXILED\Plugins (Win
 | Variable  | Meaning |
 | ------------- | ------------- |
 | `%health%` | Player's health points | 
-| `%arhealth%`  | Player's artifical health points |
 | `%healthpercent%`  | Player's health in percent |
 | `%generators%`  | Engaged generators count  |
 | `%engaging%`  | Count of generators that are currently engaging (format: (+count)) |
