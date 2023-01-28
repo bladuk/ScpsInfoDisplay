@@ -1,94 +1,51 @@
-﻿using System;
+﻿using Exiled.API.Features;
+using Exiled.API.Features.Roles;
+using MEC;
+using NorthwoodLib.Pools;
+using PlayerRoles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Exiled.API.Extensions;
-using Exiled.API.Features;
-using Exiled.API.Features.Roles;
-using Exiled.Events.EventArgs;
-using MEC;
 using UnityEngine;
+using Player = Exiled.API.Features.Player;
 
 namespace ScpsInfoDisplay
 {
-    public class EventHandlers
+    internal class EventHandlers
     {
-        private readonly Dictionary<Player, CoroutineHandle> _allDisplays = new Dictionary<Player, CoroutineHandle>();
-
-        public void OnWaitingForPlayers()
+        private CoroutineHandle _displayCoroutine;
+        
+        internal void OnRoundStarted()
         {
-            if (!string.Equals(ScpsInfoDisplay.Singleton.Config.TextAlignment, "center", StringComparison.OrdinalIgnoreCase) && !string.Equals(ScpsInfoDisplay.Singleton.Config.TextAlignment, "left", StringComparison.OrdinalIgnoreCase) && !string.Equals(ScpsInfoDisplay.Singleton.Config.TextAlignment, "right", StringComparison.OrdinalIgnoreCase))
-            {
-                Log.Warn(ScpsInfoDisplay.Singleton.Config.TextAlignment + " is an invalid value of text_alignment config. It will be replaced with the default value (right).");
-                ScpsInfoDisplay.Singleton.Config.TextAlignment = "right";
-            }
+            if (_displayCoroutine.IsRunning)
+                Timing.KillCoroutines(_displayCoroutine);
 
-            if (ScpsInfoDisplay.Singleton.Config.MarkPlayerInList && string.IsNullOrEmpty(ScpsInfoDisplay.Singleton.Config.PlayersMarker))
-            {
-                Log.Warn("Player's marker string is null or empty. It will be replaced with the default value (You -->).");
-                ScpsInfoDisplay.Singleton.Config.PlayersMarker = "<color=#D51D1D>You --></color>";
-            }
-
-            if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset < -10)
-            {
-                Log.Warn("Text position offset can't be less than -10.");
-                ScpsInfoDisplay.Singleton.Config.TextPositionOffset = -10;
-            }
-
-            if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset > 42)
-            {
-                Log.Warn("Text position offset can't be more than 42.");
-                ScpsInfoDisplay.Singleton.Config.TextPositionOffset = 42;
-            }
+            _displayCoroutine = Timing.RunCoroutine(ShowDisplay());
         }
 
-        public void OnRoundRestart()
+        private IEnumerator<float> ShowDisplay()
         {
-            foreach (var display in _allDisplays.Where(display => display.Key != null && display.Value.IsRunning))
+            while (Round.InProgress)
             {
-                Timing.KillCoroutines(display.Value);
-            }
-            _allDisplays.Clear();
-        }
-
-        public void OnPlayerChangingRole(ChangingRoleEventArgs ev)
-        {
-            if (ev.Player == null) return;
-            if (_allDisplays.ContainsKey(ev.Player) && !ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(ev.NewRole))
-            {
-                Timing.KillCoroutines(_allDisplays[ev.Player]);
-                _allDisplays.Remove(ev.Player);
-            }
-            if (!_allDisplays.ContainsKey(ev.Player) && (ev.NewRole.GetTeam() == Team.SCP && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(ev.NewRole) || ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations.Keys.Any(key => ev.Player.SessionVariables.ContainsKey(key))))
-            {
-                _allDisplays.Add(ev.Player, Timing.RunCoroutine(_showDisplay(ev.Player)));
-            }
-        }
-
-        private IEnumerator<float> _showDisplay(Player player)
-        {
-            for (; ; )
-            {
-                yield return Timing.WaitForSeconds(0.5f);
+                yield return Timing.WaitForSeconds(1f);
                 try
                 {
-                    if (player != null)
+                    foreach (var player in Player.List.Where(p => p != null && (ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role.Type) || ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations.Keys.Any(key => p.SessionVariables.ContainsKey(key)))))
                     {
-                        string text = string.Empty;
+                        var builder = StringBuilderPool.Shared.Rent($"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment.ToString().ToLower()}>");
+                        
                         foreach (var integration in ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations)
                         {
-                            text = Player.List.Where(p => p != null && p.SessionVariables.ContainsKey(integration.Key)).Aggregate(text, (current, any) => current + $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>" + (player == any && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(integration.Value, player, any) + "</align>\n");
+                            builder.Append(Player.List.Where(p => p?.SessionVariables.ContainsKey(integration.Key) == true).Aggregate(builder.ToString(), (current, any) => current + (player == any ? ScpsInfoDisplay.Singleton.Config.PlayersMarker : "") + ProcessStringVariables(integration.Value, player, any))).Append('\n');
                         }
 
-                        foreach (var scp in Player.List.Where(p => p != null && p.Role.Team == Team.SCP && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role.Type)))
+                        foreach (var scp in Player.List.Where(p => p?.Role.Team == Team.SCPs && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role.Type)))
                         {
-                            text += $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>" + (player == scp && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role.Type], player, scp) + "</align>\n";
+                            builder.Append((scp == player ? ScpsInfoDisplay.Singleton.Config.PlayersMarker : "") + ProcessStringVariables(ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role.Type], player, scp)).Append('\n');
                         }
 
-                        if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset >= 0 || (ScpsInfoDisplay.Singleton.Config.TextPositionOffset < 0 && (ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n')) > 0))
-                            text += new string('\n', ScpsInfoDisplay.Singleton.Config.TextPositionOffset >= 0 ? Math.Abs(ScpsInfoDisplay.Singleton.Config.TextPositionOffset - text.Count(t => t == '\n')) : ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n'));
-                        else if (ScpsInfoDisplay.Singleton.Config.TextPositionOffset < 0)
-                            text = text.Insert(0, new string('\n', Math.Abs(ScpsInfoDisplay.Singleton.Config.TextPositionOffset + text.Count(t => t == '\n'))));
-                        player.ShowHint(text, 1f);
+                        builder.Append($"<voffset={ScpsInfoDisplay.Singleton.Config.TextPositionOffset}em> </voffset></align>");
+                        player.ShowHint(StringBuilderPool.Shared.ToStringReturn(builder), 1.25f);
                     }
                 } 
                 catch (Exception ex)
@@ -100,13 +57,15 @@ namespace ScpsInfoDisplay
 
         private string ProcessStringVariables(string raw, Player observer, Player target) => raw
             .Replace("%arhealth%", target.ArtificialHealth > 0 ? target.ArtificialHealth.ToString() : "")
-            .Replace("%healthpercent%", Math.Floor(Mathf.Clamp01(target.Health / target.MaxHealth) * 100).ToString())
+            .Replace("%healthpercent%", Math.Floor(target.Health / target.MaxHealth * 100).ToString())
             .Replace("%health%", Math.Floor(target.Health).ToString())
             .Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString())
-            .Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "").Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleType.Scp0492).ToString())
+            .Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "")
             .Replace("%distance%", target != observer ? Math.Floor(Vector3.Distance(observer.Position, target.Position)) + "m" : "")
-            .Replace("%079level%", target.Role.Is(out Scp079Role _) ? (target.Role.As<Scp079Role>().Level + 1).ToString() : "")
-            .Replace("%079energy%", target.Role.Is(out Scp079Role _) ? Math.Floor(target.Role.As<Scp079Role>().Energy).ToString() : "")
-            .Replace("%079experience%", target.Role.Is(out Scp079Role _) ? Math.Floor(target.Role.As<Scp079Role>().Experience).ToString() : "");
+            .Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleTypeId.Scp0492).ToString())
+            .Replace("%079level%", target.Role.Is(out Scp079Role scp079) ? scp079.Level.ToString() : "")
+            .Replace("%079energy%", target.Role.Is(out Scp079Role _) ? Math.Floor(scp079.Energy).ToString() : "")
+            .Replace("%079experience%", target.Role.Is(out Scp079Role _) ? Math.Floor((double)scp079.Experience).ToString() : "")
+            .Replace("%106vigor%", target.Role.Is(out Scp106Role scp106) ? Math.Floor(scp106.Vigor * 100).ToString() : "");
     }
 }

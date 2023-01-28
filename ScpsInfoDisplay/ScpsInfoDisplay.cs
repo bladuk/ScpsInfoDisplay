@@ -1,7 +1,6 @@
-﻿using System;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
+using System;
 using Server = Exiled.Events.Handlers.Server;
-using Player = Exiled.Events.Handlers.Player;
 
 namespace ScpsInfoDisplay
 {
@@ -10,8 +9,8 @@ namespace ScpsInfoDisplay
         public override string Prefix => "scpsinfodisplay";
         public override string Name => "ScpsInfoDisplay";
         public override string Author => "bladuk.";
-        public override Version Version { get; } = new Version(1, 1, 4);
-        public override Version RequiredExiledVersion { get; } = new Version(5, 2, 1);
+        public override Version Version { get; } = new Version(2, 0, 1);
+        public override Version RequiredExiledVersion { get; } = new Version(6, 0, 0);
         public static ScpsInfoDisplay Singleton = new ScpsInfoDisplay();
         private EventHandlers _eventHandlers;
 
@@ -19,6 +18,7 @@ namespace ScpsInfoDisplay
         {
             Singleton = this;
             _eventHandlers = new EventHandlers();
+
             RegisterEvents();
 
             base.OnEnabled();
@@ -27,22 +27,20 @@ namespace ScpsInfoDisplay
         public override void OnDisabled()
         {
             UnregisterEvents();
+            _eventHandlers = null;
+            Singleton = null;
 
             base.OnDisabled();
         }
 
         private void RegisterEvents()
         {
-            Server.WaitingForPlayers += _eventHandlers.OnWaitingForPlayers;
-            Server.RestartingRound += _eventHandlers.OnRoundRestart;
-            Player.ChangingRole += _eventHandlers.OnPlayerChangingRole;
+            Server.RoundStarted += _eventHandlers.OnRoundStarted;
         }
 
         private void UnregisterEvents()
         {
-            Server.WaitingForPlayers -= _eventHandlers.OnWaitingForPlayers;
-            Server.RestartingRound -= _eventHandlers.OnRoundRestart;
-            Player.ChangingRole -= _eventHandlers.OnPlayerChangingRole;
+            Server.RoundStarted -= _eventHandlers.OnRoundStarted;
         }
     }
 }
