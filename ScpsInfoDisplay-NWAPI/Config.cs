@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Collections.Generic;
 using PlayerRoles;
+using ScpsInfoDisplay.Enums;
 
 namespace ScpsInfoDisplay
 {
@@ -19,7 +20,7 @@ namespace ScpsInfoDisplay
         [Description("Custom roles integrations. Format: TemporaryData that marks that the player belongs to that role, display string.")]
         public Dictionary<string, string> CustomRolesIntegrations { get; set; } = new Dictionary<string, string>();
         [Description("Display string alignment. Possible values: left, center, right.")]
-        public string TextAlignment { get; set; } = "right";
+        public TextAlignment TextAlignment { get; set; } = TextAlignment.Right;
         [Description("Display text position offset.")]
         public sbyte TextPositionOffset { get; set; } = 30;
         [Description("The player seeing the list will be highlighted with the special marker to the left")]

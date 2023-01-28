@@ -9,7 +9,7 @@ namespace ScpsInfoDisplay
         public override string Prefix => "scpsinfodisplay";
         public override string Name => "ScpsInfoDisplay";
         public override string Author => "bladuk.";
-        public override Version Version { get; } = new Version(2, 0, 0);
+        public override Version Version { get; } = new Version(2, 0, 1);
         public override Version RequiredExiledVersion { get; } = new Version(6, 0, 0);
         public static ScpsInfoDisplay Singleton = new ScpsInfoDisplay();
         private EventHandlers _eventHandlers;
@@ -19,7 +19,6 @@ namespace ScpsInfoDisplay
             Singleton = this;
             _eventHandlers = new EventHandlers();
 
-            ValidateConfigs();
             RegisterEvents();
 
             base.OnEnabled();
@@ -29,34 +28,18 @@ namespace ScpsInfoDisplay
         {
             UnregisterEvents();
             _eventHandlers = null;
+            Singleton = null;
 
             base.OnDisabled();
         }
 
-        private void ValidateConfigs()
-        {
-            if (!string.Equals(Config.TextAlignment, "center", StringComparison.OrdinalIgnoreCase) && !string.Equals(Config.TextAlignment, "left", StringComparison.OrdinalIgnoreCase) && !string.Equals(Config.TextAlignment, "right", StringComparison.OrdinalIgnoreCase))
-            {
-                Log.Warn(Config.TextAlignment + " is an invalid value of text_alignment config. It will be replaced with the default value (right).");
-                Config.TextAlignment = "right";
-            }
-
-            if (Config.MarkPlayerInList && string.IsNullOrEmpty(Config.PlayersMarker))
-            {
-                Log.Warn("Player's marker string is null or empty. It will be replaced with the default value (You -->).");
-                Config.PlayersMarker = "<color=#D51D1D>You --></color>";
-            }
-        }
-
         private void RegisterEvents()
         {
-            Server.ReloadedConfigs += ValidateConfigs;
             Server.RoundStarted += _eventHandlers.OnRoundStarted;
         }
 
         private void UnregisterEvents()
         {
-            Server.ReloadedConfigs -= ValidateConfigs;
             Server.RoundStarted -= _eventHandlers.OnRoundStarted;
         }
     }

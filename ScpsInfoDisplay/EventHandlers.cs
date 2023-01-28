@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using Exiled.API.Features.Roles;
 using MEC;
+using NorthwoodLib.Pools;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
@@ -31,20 +32,20 @@ namespace ScpsInfoDisplay
                 {
                     foreach (var player in Player.List.Where(p => p != null && (ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role.Type) || ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations.Keys.Any(key => p.SessionVariables.ContainsKey(key)))))
                     {
-                        string text = $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>";
+                        var builder = StringBuilderPool.Shared.Rent($"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment.ToString().ToLower()}>");
                         
                         foreach (var integration in ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations)
                         {
-                            text = Player.List.Where(p => p?.SessionVariables.ContainsKey(integration.Key) == true).Aggregate(text, (current, any) => current + (player == any && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(integration.Value, player, any) + "\n");
+                            builder.Append(Player.List.Where(p => p?.SessionVariables.ContainsKey(integration.Key) == true).Aggregate(builder.ToString(), (current, any) => current + (player == any ? ScpsInfoDisplay.Singleton.Config.PlayersMarker : "") + ProcessStringVariables(integration.Value, player, any))).Append('\n');
                         }
 
                         foreach (var scp in Player.List.Where(p => p?.Role.Team == Team.SCPs && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role.Type)))
                         {
-                            text += (player == scp && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role.Type], player, scp) + "\n";
+                            builder.Append((scp == player ? ScpsInfoDisplay.Singleton.Config.PlayersMarker : "") + ProcessStringVariables(ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role.Type], player, scp)).Append('\n');
                         }
 
-                        text += $"<voffset={ScpsInfoDisplay.Singleton.Config.TextPositionOffset}em> </voffset></align>";
-                        player.ShowHint(text, 1.25f);
+                        builder.Append($"<voffset={ScpsInfoDisplay.Singleton.Config.TextPositionOffset}em> </voffset></align>");
+                        player.ShowHint(StringBuilderPool.Shared.ToStringReturn(builder), 1.25f);
                     }
                 } 
                 catch (Exception ex)
@@ -65,6 +66,6 @@ namespace ScpsInfoDisplay
             .Replace("%079level%", target.Role.Is(out Scp079Role scp079) ? scp079.Level.ToString() : "")
             .Replace("%079energy%", target.Role.Is(out Scp079Role _) ? Math.Floor(scp079.Energy).ToString() : "")
             .Replace("%079experience%", target.Role.Is(out Scp079Role _) ? Math.Floor((double)scp079.Experience).ToString() : "")
-            .Replace("%106vigor%", target.Role.Is(out Scp106Role scp106) ? Math.Round(scp106.Vigor * 100, 0).ToString() : "");
+            .Replace("%106vigor%", target.Role.Is(out Scp106Role scp106) ? Math.Floor(scp106.Vigor * 100).ToString() : "");
     }
 }

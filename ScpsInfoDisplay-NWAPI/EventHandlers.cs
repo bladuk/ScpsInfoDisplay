@@ -8,6 +8,7 @@ using System.Linq;
 using MapGeneration.Distributors;
 using UnityEngine;
 using MEC;
+using NorthwoodLib.Pools;
 using PlayerRoles.PlayableScps.Scp079;
 using PlayerRoles.PlayableScps.Scp106;
 using Object = UnityEngine.Object;
@@ -43,20 +44,20 @@ namespace ScpsInfoDisplay
                 {
                     foreach (var player in Player.GetPlayers().Where(p => p != null && (ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role) || ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations.Keys.Any(key => p.TemporaryData.Contains(key)))))
                     {
-                        string text = $"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment}>";
+                        var builder = StringBuilderPool.Shared.Rent($"<align={ScpsInfoDisplay.Singleton.Config.TextAlignment.ToString().ToLower()}>");
                         
                         foreach (var integration in ScpsInfoDisplay.Singleton.Config.CustomRolesIntegrations)
                         {
-                            text = Player.GetPlayers().Where(p => p?.TemporaryData.Contains(integration.Key) == true).Aggregate(text, (current, any) => current + (player == any && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(integration.Value, player, any) + "\n");
+                            builder.Append(Player.GetPlayers().Where(p => p?.TemporaryData.Contains(integration.Key) == true).Aggregate(builder.ToString(), (current, any) => current + (player == any && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(integration.Value, player, any) + "\n"));
                         }
 
                         foreach (var scp in Player.GetPlayers().Where(p => p?.Role.GetTeam() == Team.SCPs && ScpsInfoDisplay.Singleton.Config.DisplayStrings.ContainsKey(p.Role)))
                         {
-                            text += (player == scp && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role], player, scp) + "\n";
+                            builder.Append((player == scp && ScpsInfoDisplay.Singleton.Config.MarkPlayerInList ? ScpsInfoDisplay.Singleton.Config.PlayersMarker + " " : "") + ProcessStringVariables(ScpsInfoDisplay.Singleton.Config.DisplayStrings[scp.Role], player, scp) + "\n");
                         }
 
-                        text += $"<voffset={ScpsInfoDisplay.Singleton.Config.TextPositionOffset}em> </voffset></align>";
-                        player.ReceiveHint(text, 1.25f);
+                        builder.Append($"<voffset={ScpsInfoDisplay.Singleton.Config.TextPositionOffset}em> </voffset></align>");
+                        player.ReceiveHint(StringBuilderPool.Shared.ToStringReturn(builder), 1.25f);
                     }
                 } 
                 catch (Exception ex)

@@ -42,6 +42,9 @@
         <Reference Include="Mirror">
           <HintPath>..\Mirror.dll</HintPath>
         </Reference>
+        <Reference Include="NorthwoodLib">
+          <HintPath>..\NorthwoodLib.dll</HintPath>
+        </Reference>
         <Reference Include="PluginAPI">
           <HintPath>..\PluginAPI.dll</HintPath>
         </Reference>
@@ -55,6 +58,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Config.cs" />
+        <Compile Include="Enums\TextAlignment.cs" />
         <Compile Include="EventHandlers.cs" />
         <Compile Include="ScpsInfoDisplay.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

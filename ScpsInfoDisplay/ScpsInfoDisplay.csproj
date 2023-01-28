@@ -43,6 +43,9 @@
     <Reference Include="Exiled.Events">
       <HintPath>..\..\Exiled.Events.dll</HintPath>
     </Reference>
+    <Reference Include="NorthwoodLib">
+      <HintPath>..\..\..\nwapi_plugins\NorthwoodLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="UnityEngine.CoreModule">
@@ -51,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="Enums\TextAlignment.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="ScpsInfoDisplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
