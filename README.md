@@ -3,6 +3,7 @@ When SCP spawns, displays information about players who are in the SCP team. Pos
 
 ## How to install plugin?
 [For Northwood API](https://github.com/bladuk/ScpsInfoDisplay/blob/main/ScpsInfoDisplay-NWAPI/README.md)
+
 [For EXILED](https://github.com/bladuk/ScpsInfoDisplay/blob/main/ScpsInfoDisplay/README.md)
 
 ## String variables
