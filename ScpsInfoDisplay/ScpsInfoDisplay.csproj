@@ -31,25 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>..\..\Exiled.API.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Events">
-      <HintPath>..\..\Exiled.Events.dll</HintPath>
-    </Reference>
-    <Reference Include="NorthwoodLib">
-      <HintPath>..\..\..\nwapi_plugins\NorthwoodLib.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\Master Exiled\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\Master Exiled\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +46,11 @@
     <Compile Include="EventHandlers.cs" />
     <Compile Include="ScpsInfoDisplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EXILED">
+      <Version>8.0.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
