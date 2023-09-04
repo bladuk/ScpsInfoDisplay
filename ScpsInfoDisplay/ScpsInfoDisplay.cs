@@ -8,9 +8,9 @@ namespace ScpsInfoDisplay
     {
         public override string Prefix => "scpsinfodisplay";
         public override string Name => "ScpsInfoDisplay";
-        public override string Author => "bladuk.";
+        public override string Author => "Vicious Vikki";
         public override Version Version { get; } = new Version(2, 0, 1);
-        public override Version RequiredExiledVersion { get; } = new Version(6, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(8, 1, 0);
         public static ScpsInfoDisplay Singleton = new ScpsInfoDisplay();
         private EventHandlers _eventHandlers;
 
