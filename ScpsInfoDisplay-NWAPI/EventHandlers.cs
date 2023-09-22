@@ -80,8 +80,7 @@ namespace ScpsInfoDisplay
                         .Replace("%079experience", tier.RelativeExp.ToString());
                     break;
                 case Scp106Role scp106:
-                    scp106.SubroutineModule.TryGetSubroutine(out Scp106Vigor vigor);
-                    raw = raw.Replace("%106vigor%", Math.Floor(vigor.VigorAmount * 100).ToString());
+                    raw = raw.Replace("%106vigor%", Math.Floor(scp106.TargetStats.GetModule<Scp106Vigor>().CurValue * 100).ToString());
                     break;
 
             }

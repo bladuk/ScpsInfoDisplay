@@ -11,7 +11,7 @@ using Player = Exiled.API.Features.Player;
 
 namespace ScpsInfoDisplay
 {
-    internal class EventHandlers
+    internal sealed class EventHandlers
     {
         private CoroutineHandle _displayCoroutine;
         

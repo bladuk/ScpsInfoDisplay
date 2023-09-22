@@ -34,26 +34,32 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Assembly-CSharp">
-          <HintPath>..\Assembly-CSharp_publicized.dll</HintPath>
+          <HintPath>..\..\References\Assembly-CSharp-Publicized.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass">
-          <HintPath>..\Assembly-CSharp-firstpass.dll</HintPath>
+          <HintPath>..\..\nwapi_references\Assembly-CSharp-firstpass.dll</HintPath>
         </Reference>
         <Reference Include="Mirror">
-          <HintPath>..\Mirror.dll</HintPath>
+          <HintPath>..\..\nwapi_references\Mirror.dll</HintPath>
         </Reference>
         <Reference Include="NorthwoodLib">
-          <HintPath>..\NorthwoodLib.dll</HintPath>
+          <HintPath>..\..\nwapi_references\NorthwoodLib.dll</HintPath>
         </Reference>
-        <Reference Include="PluginAPI">
-          <HintPath>..\PluginAPI.dll</HintPath>
+        <Reference Include="PluginAPI, Version=13.1.1.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\Northwood.PluginAPI.13.1.1\lib\net48\PluginAPI.dll</HintPath>
+        </Reference>
+        <Reference Include="Pooling">
+          <HintPath>..\..\References\Pooling.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
         <Reference Include="UnityEngine.CoreModule">
-          <HintPath>..\UnityEngine.CoreModule.dll</HintPath>
+          <HintPath>..\..\nwapi_references\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="YamlDotNet, Version=11.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+          <HintPath>..\packages\YamlDotNet.11.0.1\lib\net45\YamlDotNet.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>
@@ -62,6 +68,9 @@
         <Compile Include="EventHandlers.cs" />
         <Compile Include="ScpsInfoDisplay.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

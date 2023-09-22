@@ -10,6 +10,7 @@ namespace ScpsInfoDisplay
     {
         [Description("Is the plugin enabled?")]
         public bool IsEnabled { get; set; } = true;
+        
         [Description("Display strings. Format: Role, display string.")]
         public Dictionary<RoleTypeId, string> DisplayStrings { get; set; } = new Dictionary<RoleTypeId, string>()
         {
@@ -18,16 +19,21 @@ namespace ScpsInfoDisplay
             { RoleTypeId.Scp096, "<color=#D51D1D>SCP-096 [%healthpercent%%] %distance%</color>" },
             { RoleTypeId.Scp106, "<color=#D51D1D>SCP-106 [%healthpercent%%] Vigor: %106vigor%% %distance%</color>" },
             { RoleTypeId.Scp173, "<color=#D51D1D>SCP-173 [%healthpercent%%] %distance%</color>" },
-            { RoleTypeId.Scp939, "<color=#D51D1D>SCP-939 [%healthpercent%%] %distance%</color>" },
+            { RoleTypeId.Scp939, "<color=#D51D1D>SCP-939 [%healthpercent%%] %distance%</color>" }
         };
+        
         [Description("Custom roles integrations. Format: SessionVariable that marks that the player belongs to that role, display string.")]
         public Dictionary<string, string> CustomRolesIntegrations { get; set; } = new Dictionary<string, string>();
+        
         [Description("Display string alignment. Possible values: Left, Center, Right.")]
         public TextAlignment TextAlignment { get; set; } = TextAlignment.Right;
+        
         [Description("Display text position offset.")]
         public sbyte TextPositionOffset { get; set; } = 30;
+        
         [Description("The player seeing the list will be highlighted with the special marker to the left. Leave it empty if disabled.")]
         public string PlayersMarker { get; set; } = "<color=#D51D1D>You --></color>";
+        
         [Description("Display debug messages in server console?")]
         public bool Debug { get; set; } = false;
     }

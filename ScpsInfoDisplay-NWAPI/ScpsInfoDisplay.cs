@@ -10,7 +10,7 @@ namespace ScpsInfoDisplay
         [PluginConfig]
         public Config Config;
 
-        [PluginEntryPoint("ScpsInfoDisplay", "2.0.1", "A plugin that displays information about SCPs in player's team.", "bladuk.")]
+        [PluginEntryPoint("ScpsInfoDisplay", "2.0.2", "A plugin that displays information about SCPs in player's team.", "bladuk.")]
         private void LoadPlugin()
         {
             Singleton = this;
