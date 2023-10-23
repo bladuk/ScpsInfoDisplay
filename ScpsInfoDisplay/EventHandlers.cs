@@ -56,7 +56,7 @@ namespace ScpsInfoDisplay
         }
 
         private string ProcessStringVariables(string raw, Player observer, Player target) => raw
-            .Replace("%arhealth%", target.ArtificialHealth > 0 ? target.ArtificialHealth.ToString() : "")
+            .Replace("%arhealth%", Math.Floor(target.HumeShield) >= 0 ? Math.Floor(target.HumeShield).ToString() : "")
             .Replace("%healthpercent%", Math.Floor(target.Health / target.MaxHealth * 100).ToString())
             .Replace("%health%", Math.Floor(target.Health).ToString())
             .Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString())
