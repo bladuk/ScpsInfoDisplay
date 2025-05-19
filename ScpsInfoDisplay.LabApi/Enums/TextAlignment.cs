@@ -1,4 +1,4 @@
-﻿namespace ScpsInfoDisplay.Enums
+﻿namespace ScpsInfoDisplay.LabApi.Enums
 {
     public enum TextAlignment : byte
     {

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScpsInfoDisplay", "ScpsInfoDisplay\ScpsInfoDisplay.csproj", "{8DAA7834-8141-448E-8694-EBE9F4800C66}"
 EndProject
-Project("{DE55514B-C887-4021-80A4-6572F4EE1894}") = "ScpsInfoDisplay-NWAPI", "ScpsInfoDisplay-NWAPI\ScpsInfoDisplay.csproj", "{DE55514B-C887-4021-80A4-6572F4EE1894}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScpsInfoDisplay.LabApi", "ScpsInfoDisplay.LabApi\ScpsInfoDisplay.LabApi.csproj", "{79AD48CA-BD51-437F-8F9A-09081AA056FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,10 @@ Global
 		{8DAA7834-8141-448E-8694-EBE9F4800C66}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DAA7834-8141-448E-8694-EBE9F4800C66}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{8DAA7834-8141-448E-8694-EBE9F4800C66}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{DE55514B-C887-4021-80A4-6572F4EE1894}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{DE55514B-C887-4021-80A4-6572F4EE1894}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{79AD48CA-BD51-437F-8F9A-09081AA056FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79AD48CA-BD51-437F-8F9A-09081AA056FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79AD48CA-BD51-437F-8F9A-09081AA056FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79AD48CA-BD51-437F-8F9A-09081AA056FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
