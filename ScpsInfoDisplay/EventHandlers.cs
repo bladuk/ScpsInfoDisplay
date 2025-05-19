@@ -56,16 +56,17 @@ namespace ScpsInfoDisplay
         }
 
         private string ProcessStringVariables(string raw, Player observer, Player target) => raw
-            .Replace("%arhealth%", target.ArtificialHealth > 0 ? target.ArtificialHealth.ToString() : "")
+            .Replace("%arhealth%", target.HumeShield > 0 ? target.HumeShield.ToString() : "")
             .Replace("%healthpercent%", Math.Floor(target.Health / target.MaxHealth * 100).ToString())
             .Replace("%health%", Math.Floor(target.Health).ToString())
             .Replace("%generators%", Generator.List.Count(gen => gen.IsEngaged).ToString())
             .Replace("%engaging%", Generator.List.Count(gen => gen.IsActivating) > 0 ? $" (+{Generator.List.Count(gen => gen.IsActivating)})" : "")
-            .Replace("%distance%", target != observer ? Math.Floor(Vector3.Distance(observer.Position, target.Position)) + "m" : "")
+            .Replace("%distance%", target != observer ? Math.Floor(Vector3.Distance(observer.Role.Type != RoleTypeId.Scp079 ? observer.Position : observer.Role.As<Scp079Role>().CameraPosition, target.Position)) + "m" : "")
             .Replace("%zombies%", Player.List.Count(p => p.Role.Type == RoleTypeId.Scp0492).ToString())
             .Replace("%079level%", target.Role.Is(out Scp079Role scp079) ? scp079.Level.ToString() : "")
             .Replace("%079energy%", target.Role.Is(out Scp079Role _) ? Math.Floor(scp079.Energy).ToString() : "")
             .Replace("%079experience%", target.Role.Is(out Scp079Role _) ? Math.Floor((double)scp079.Experience).ToString() : "")
-            .Replace("%106vigor%", target.Role.Is(out Scp106Role scp106) ? Math.Floor(scp106.Vigor * 100).ToString() : "");
+            .Replace("%106vigor%", target.Role.Is(out Scp106Role scp106) ? Math.Floor(scp106.Vigor * 100).ToString() : "")
+            .Replace("%roleColor%", target.Role.Color.ToHex());
     }
 }
